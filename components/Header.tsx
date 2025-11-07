@@ -1,5 +1,5 @@
 import React from 'react';
-import { MagicWandIcon } from './GenerateButton';
+import { MagicWandIcon } from '@/components/GenerateButton';
 
 export const Header: React.FC = () => {
   return (

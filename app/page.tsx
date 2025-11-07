@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { ImageUploader } from '../components/ImageUploader';
-import { StyleSelector } from '../components/StyleSelector';
-import { ResultDisplay } from '../components/ResultDisplay';
-import { Header } from '../components/Header';
-import { GenerateButton } from '../components/GenerateButton';
-import { ART_STYLES, ArtStyle } from '../constants';
-import { transformImageAction } from './actions';
-import { fetchAvailableStyles } from '../services/styleService';
-import { fileToBase64 } from '../utils/fileUtils';
-import { Navbar } from '../components/Navbar';
-import { Footer } from '../components/Footer';
+import { ImageUploader } from '@/components/ImageUploader';
+import { StyleSelector } from '@/components/StyleSelector';
+import { ResultDisplay } from '@/components/ResultDisplay';
+import { Header } from '@/components/Header';
+import { GenerateButton } from '@/components/GenerateButton';
+import { ART_STYLES, ArtStyle } from '@/constants';
+import { transformImageAction } from '@/app/actions';
+import { fetchAvailableStyles } from '@/services/styleService';
+import { fileToBase64 } from '@/utils/fileUtils';
+import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 const HomePage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

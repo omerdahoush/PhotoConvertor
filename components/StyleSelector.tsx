@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArtStyle } from '../constants';
+import { ArtStyle } from '@/constants';
 
 interface StyleSelectorProps {
   styles: ArtStyle[];
