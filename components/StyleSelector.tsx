@@ -1,8 +1,9 @@
 
 import React from 'react';
+import { ArtStyle } from '../constants';
 
 interface StyleSelectorProps {
-  styles: string[];
+  styles: ArtStyle[];
   selectedStyle: string | null;
   onStyleSelect: (style: string) => void;
   onLoadMore: () => void;
@@ -24,20 +25,20 @@ export const StyleSelector: React.FC<StyleSelectorProps> = ({ styles, selectedSt
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
       {styles.map((style) => {
-        const isSelected = style === selectedStyle;
-        const imageUrl = `https://picsum.photos/seed/${style.replace(/\s+/g, '')}/200/200`;
+        const isSelected = style.name === selectedStyle;
+        const imageUrl = style.imageUrl;
 
         return (
           <button
-            key={style}
-            onClick={() => onStyleSelect(style)}
+            key={style.name}
+            onClick={() => onStyleSelect(style.name)}
             className={`relative group overflow-hidden rounded-lg text-white font-bold p-3 text-center transition-all duration-300 transform focus:outline-none focus:ring-4 focus:ring-cyan-500 focus:ring-opacity-50 h-24 ${
               isSelected ? 'ring-4 ring-cyan-500 scale-105 shadow-2xl' : 'ring-2 ring-transparent hover:ring-cyan-500 hover:scale-105'
             }`}
           >
-            <img src={imageUrl} alt={style} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+            <img src={imageUrl} alt={style.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
             <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-300"></div>
-            <span className="relative z-10 drop-shadow-lg">{style}</span>
+            <span className="relative z-10 drop-shadow-lg">{style.name}</span>
           </button>
         );
       })}

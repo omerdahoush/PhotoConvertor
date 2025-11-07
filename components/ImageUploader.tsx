@@ -96,15 +96,25 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect, sele
         setStream(stream);
     } catch (err) {
         console.error("Error accessing camera:", err);
+        let userMessage = "An unknown error occurred while accessing the camera. Please ensure it's not in use by another app and that your browser has permission.";
+        
         if (err instanceof Error) {
-            if (err.name === 'NotAllowedError') {
-                setCameraError("Camera access denied. To use this feature, please grant camera permission for this site in your browser's address bar or settings.");
-            } else {
-                setCameraError(`Error accessing camera: ${err.message}`);
+            switch (err.name) {
+                case 'NotAllowedError':
+                    userMessage = "Camera access denied. Please grant camera permission in your browser's settings and refresh the page to use this feature.";
+                    break;
+                case 'NotFoundError':
+                    userMessage = "No camera found on your device. Please ensure a camera is connected and enabled.";
+                    break;
+                case 'NotReadableError':
+                    userMessage = "The camera is currently in use by another application or is otherwise unavailable. Please close any other apps using the camera and try again.";
+                    break;
+                case 'OverconstrainedError':
+                    userMessage = "The camera on your device does not support the required video settings.";
+                    break;
             }
-        } else {
-            setCameraError("An unknown error occurred while accessing the camera.");
         }
+        setCameraError(userMessage);
     }
   };
 

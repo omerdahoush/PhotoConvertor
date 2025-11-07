@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface ResultDisplayProps {
@@ -78,28 +79,47 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ isLoading, generat
         }
         
         if (generatedImage) {
+            const styleName = selectedStyle ? selectedStyle.replace(/\s+/g, '-') : 'styled';
+            const filename = `${originalFileName}-${styleName}.jpg`;
+            let file: File | null = null;
+            
             try {
-                const file = dataURLtoFile(generatedImage, `${originalFileName}.jpg`);
-                if (!file) {
-                    throw new Error("Failed to prepare image for sharing.");
-                }
+                file = dataURLtoFile(generatedImage, filename);
+            } catch(e) {
+                console.error("Error creating file for sharing:", e);
+            }
 
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            // Attempt to share the file if it was created successfully
+            if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
                     await navigator.share({
                         title: 'My AI Artwork',
                         text: 'Check out this artwork I created!',
                         files: [file],
                     });
-                } else {
-                    alert("Sharing files is not supported on this browser. Please download the image instead.");
+                    return; // Success!
+                } catch (error) {
+                    if (error instanceof DOMException && error.name === 'AbortError') {
+                        console.log("Share action was cancelled by the user.");
+                        return;
+                    }
+                    console.warn("Sharing file failed, falling back to URL share.", error);
                 }
+            }
+
+            // Fallback: If file sharing is not supported, not possible, or failed, share the app URL.
+            try {
+                await navigator.share({
+                    title: 'Artistic Photo Style Converter',
+                    text: `I just created this ${selectedStyle || 'cool'} artwork! Check out the app.`,
+                    url: window.location.href,
+                });
             } catch (error) {
                 if (error instanceof DOMException && error.name === 'AbortError') {
-                    // User cancelled the share operation, do nothing.
                     console.log("Share action was cancelled by the user.");
                 } else {
-                    console.error('Error sharing:', error);
-                    alert("Sharing failed. Your browser might not support sharing files. Please download the image instead.");
+                    console.error('Error sharing app URL:', error);
+                    alert("Sharing failed. Please download the image to share it manually.");
                 }
             }
         }
